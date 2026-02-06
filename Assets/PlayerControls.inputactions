@@ -1,9 +1,9 @@
 {
     "version": 1,
-    "name": "PlayerLocomotion",
+    "name": "PlayerControls",
     "maps": [
         {
-            "name": "Player",
+            "name": "PlayerLocomotionMap",
             "id": "de72bfb9-2929-40f5-96e6-0526a131ce69",
             "actions": [
                 {
@@ -19,6 +19,24 @@
                     "name": "Jump",
                     "type": "Button",
                     "id": "90f2b09f-bd44-4c9d-acfc-c7847e921b95",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "b2428fc6-6d01-44d4-a98d-b4902d70764d",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "ab50dca4-1c64-4175-96d3-0a7b7bebe836",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -39,7 +57,7 @@
                 },
                 {
                     "name": "",
-                    "id": "a4f4b762-0344-4052-a418-f550f6cbc17d",
+                    "id": "aad1d18c-f506-48bc-ac4f-1f205275a747",
                     "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
@@ -104,59 +122,59 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "3c1fd9f3-a069-4fe8-b36b-12f767d7e8da",
-                    "path": "2DVector",
+                    "name": "",
+                    "id": "0a31d534-3fa0-477d-9cfb-0b9389644fb0",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Move",
-                    "isComposite": true,
+                    "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "f8540da3-7627-4307-9ee2-309a8ddce61f",
-                    "path": "<Gamepad>/dpad/up",
+                    "name": "",
+                    "id": "c9bd50d5-f122-4d8b-8c71-e086c3ad18be",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Look",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "down",
-                    "id": "f6d94f4a-a43e-4410-9c25-c5150b28fab5",
-                    "path": "<Gamepad>/dpad/down",
+                    "name": "",
+                    "id": "47bcf40a-04e6-4342-bb77-df2ae8ef7f29",
+                    "path": "<Gamepad>/rightStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Look",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "left",
-                    "id": "9625af39-8367-4adf-b993-d9b87b87af5e",
-                    "path": "<Gamepad>/dpad/left",
+                    "name": "",
+                    "id": "d97cca12-f6a4-4662-a12f-aadc483f353e",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Dash",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 },
                 {
-                    "name": "right",
-                    "id": "243ca792-2018-4c8a-918f-a7a5f55432b0",
-                    "path": "<Gamepad>/dpad/right",
+                    "name": "",
+                    "id": "1d6f8035-d916-44a4-a66a-53fd005d6f71",
+                    "path": "<Gamepad>/leftStickPress",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Move",
+                    "action": "Dash",
                     "isComposite": false,
-                    "isPartOfComposite": true
+                    "isPartOfComposite": false
                 }
             ]
         }
