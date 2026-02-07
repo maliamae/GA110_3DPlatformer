@@ -7,12 +7,15 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public CinemachineCamera playerCam;
 
+    public Animator animator;
+    //private float currentV;
+
     private Vector2 cameraRotation = Vector2.zero;
     private Vector2 playerTargetRotation = Vector2.zero;
 
     public float lookSenseH = 0.1f;
     public float lookSenseV = 0.1f;
-    public float lookLimitV = 89f;
+    public float lookLimitV = 0f;
 
     public float gravity = -9.81f;
     public float jumpForce = 5f;
@@ -35,11 +38,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Move();
 
-        if (Input.GetMouseButtonDown(0) && cursorOn)
-        {
-            DisableCursor();
-        }
-
         if (!controller.isGrounded)
         {
             velocity.y += gravity * Time.deltaTime;
@@ -50,13 +48,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void LateUpdate()
     {
+        /*
         cameraRotation.x += lookSenseH * look.x;
         cameraRotation.y = Mathf.Clamp(cameraRotation.y - lookSenseV * look.y, -lookLimitV, lookLimitV);
 
-        playerTargetRotation.x += transform.eulerAngles.x + lookSenseH * look.x;
+        playerTargetRotation.x += transform.eulerAngles.x + (lookSenseH * look.x);
         transform.rotation = Quaternion.Euler(0f, playerTargetRotation.x, 0f);
 
-        playerCam.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
+        //playerCam.transform.rotation = Quaternion.Euler(cameraRotation.y, cameraRotation.x, 0f);
+        //transform.rotation = Quaternion.Euler(0f, cameraRotation.x, 0f);
+        */
+        transform.rotation = Quaternion.Euler(0f, playerCam.transform.eulerAngles.y, 0f);
     }
 
     private void OnMove(InputValue inputValue)
@@ -78,6 +80,21 @@ public class PlayerMovement : MonoBehaviour
     private void OnLook(InputValue inputValue)
     {
         look = inputValue.Get<Vector2>();
+        /*
+        if (!cursorOn)
+        {
+            look = inputValue.Get<Vector2>();
+        }
+        else
+        {
+            look = Vector2.zero;
+        }
+        */
+    }
+
+    private void OnLockCursor(InputValue inputValue)
+    {
+        DisableCursor();
     }
 
     private void Move()
@@ -92,6 +109,12 @@ public class PlayerMovement : MonoBehaviour
 
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
             controller.Move(moveDir.normalized * speed * Time.deltaTime);
+
+            animator.SetFloat("moveSpeed",targetDir.magnitude);
+        }
+        else
+        {
+            animator.SetFloat("moveSpeed", targetDir.magnitude);
         }
 
         
@@ -111,6 +134,8 @@ public class PlayerMovement : MonoBehaviour
     private void DisableCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        cursorOn = false;
+        //transform.rotation = Quaternion.Euler(new Vector3(0,0,0));
         //Debug.Log("click");
     }
 }
