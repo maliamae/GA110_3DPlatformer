@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     float turnSmoothVelocity; //used as a ref in smoothly turning character model to face same direction as camera
 
     private Vector2 move; //used to store input direction
+    private Vector2 climb;
     private Vector3 targetDir; //converts and stores input direction into a Vector3 format 
 
     [SerializeField]
@@ -32,9 +33,13 @@ public class PlayerMovement : MonoBehaviour
     private bool isFalling = false; //used to track if character is falling for animation
 
     private bool isDashing = false; //used to limit dash frequency
-    
+
+    private bool isClimbing = false;
+
     //private bool isDead = false; //originally intended to disable movements when player dies, but with the new input system I can just use the .Dsiable() function instead
-    private bool cursorOn = true; //used to keep track of cursor visibility
+    //private bool cursorOn = true; //used to keep track of cursor visibility
+
+    public Transform spawnPoint;
 
     private void OnEnable()
     {
@@ -42,15 +47,28 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
+        /*
+        if (!isClimbing)
+        {
+            Move();
+        }
+        else
+        {
+            Climb();
+        }
+        */
         Move();
-
         //apply gravity on y axis if player is not grounded (jumped):
-        if (!controller.isGrounded)
+        if (!controller.isGrounded && !isClimbing)
         {
             velocity.y += gravity * Time.deltaTime;
-            
         }
-        
+        else if (isClimbing)
+        {
+            velocity = Vector3.zero;
+        }
+
+        //controller.Move(velocity * Time.deltaTime);
         animator.SetBool("isGrounded", controller.isGrounded); //update animator isGrounded parameter
     }
 
@@ -70,11 +88,41 @@ public class PlayerMovement : MonoBehaviour
         {
             OnWaterEnter(); //disables player input action map
         }
+
+        if (other.gameObject.tag == "Vine")
+        {
+            Climb();
+        }
+        
     }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Vine")
+        {
+            isClimbing = false;
+        }
+    }
+
+    /*
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        Debug.Log("hit");
+        if (hit.gameObject.tag == "Vine")
+        {
+            Climb();
+        }
+    }
+   */
 
     private void OnMove(InputValue inputValue) //called when action map recieves Move inputs
     {
         move = inputValue.Get<Vector2>();
+    }
+
+    private void OnClimb(InputValue inputValue)
+    {
+        climb = inputValue.Get<Vector2>();
     }
 
     private void OnJump() //called when action map recieves Jump input
@@ -108,7 +156,6 @@ public class PlayerMovement : MonoBehaviour
         {
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward; //calculates the direction the player should move in, aligning with the player camera, in Vector3 format
             controller.Move(moveDir.normalized * walkSpeed * Time.deltaTime); //moves player in that direction at desired walking speed
-
         }
 
         controller.Move(velocity * Time.deltaTime);
@@ -117,8 +164,14 @@ public class PlayerMovement : MonoBehaviour
         isFalling = !controller.isGrounded && velocity.y < -0.1f;
         animator.SetBool("isFalling", isFalling);
 
-        Debug.Log(controller.isGrounded);
+        //Debug.Log(controller.isGrounded);
         //Debug.Log(velocity.y);
+    }
+
+    public void Climb()
+    {
+        isClimbing = true;
+        Debug.Log("is climbing");
     }
 
     private void Jump()
@@ -146,12 +199,17 @@ public class PlayerMovement : MonoBehaviour
     private void DisableCursor()
     {
         Cursor.lockState = CursorLockMode.Locked; //locks cursor to center of screen and turns off visibility
-        cursorOn = false;
+        //cursorOn = false;
     }
 
     private void OnWaterEnter()
     {
-        GetComponent<PlayerInput>().currentActionMap.Disable(); //stops taking and applying player inputs (movement)
-        transform.position = Vector3.zero; //returns player to current temperary respawn point
+        //Debug.Log("Splash");
+        controller.enabled = false;
+        transform.position = spawnPoint.position; //returns player to current temperary respawn point
+        controller.enabled = true;
+        //GetComponent<PlayerInput>().currentActionMap.Disable(); //stops taking and applying player inputs (movement)
+        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
+        
     }
 }
