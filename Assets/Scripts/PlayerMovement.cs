@@ -33,15 +33,8 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 velocity; //used to apply gravity and jump force on y axis
     [SerializeField]
     private bool isFalling = false; //used to track if character is falling for animation
-
     private bool isDashing = false; //used to limit dash frequency
-
     private bool isClimbing = false;
-
-    //private bool isDead = false; //originally intended to disable movements when player dies, but with the new input system I can just use the .Dsiable() function instead
-    //private bool cursorOn = true; //used to keep track of cursor visibility
-
-    
 
     private void OnEnable()
     {
@@ -72,6 +65,9 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //controller.Move(velocity * Time.deltaTime);
+        animator.SetFloat("moveSpeed", targetDir.magnitude); //updates animator moveSpeed parameter
+        isFalling = !controller.isGrounded && velocity.y < -0.1f;
+        animator.SetBool("isFalling", isFalling);
         animator.SetBool("isGrounded", controller.isGrounded); //update animator isGrounded parameter
     }
 
@@ -111,16 +107,15 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    /*
+    /*//USE TRIGGERS INSTEAD
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        Debug.Log("hit");
-        if (hit.gameObject.tag == "Vine")
+        if (hit.gameObject.tag == "Platform")
         {
-            Climb();
+            transform.parent = hit.gameObject.transform;
         }
     }
-   */
+    */
 
     private void OnMove(InputValue inputValue) //called when action map recieves Move inputs
     {
@@ -167,13 +162,6 @@ public class PlayerMovement : MonoBehaviour
         }
 
         controller.Move(velocity * Time.deltaTime);
-
-        animator.SetFloat("moveSpeed", targetDir.magnitude); //updates animator moveSpeed parameter
-        isFalling = !controller.isGrounded && velocity.y < -0.1f;
-        animator.SetBool("isFalling", isFalling);
-
-        //Debug.Log(controller.isGrounded);
-        //Debug.Log(velocity.y);
     }
 
     public void Climb()
@@ -183,13 +171,11 @@ public class PlayerMovement : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            //transform.forward = -hit.normal;
             transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 5f * Time.deltaTime);
         }
 
         if (targetDir.magnitude >= 0.1f) //if player is giving inputs for x and z direction...
         {
-            //Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward; //calculates the direction the player should move in, aligning with the player camera, in Vector3 format
             controller.Move(targetDir.normalized * climbSpeed * Time.deltaTime); //moves player in that direction at desired walking speed
         }
     }
