@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller; //plug in character controller component that is attached to same object this script is attached to
     public CinemachineCamera playerCam; //plug in third person free look camera
     public Animator animator; //plug in animator component that is attached to same object this script is attached to
+    public Transform spawnPoint;
 
     [Header("Jump")]
     public float gravity = -9.81f;
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement Speed")]
     public float walkSpeed;
+    public float climbSpeed;
     public float dashSpeed;
     public float dashCoolDown = 2f;
 
@@ -39,15 +41,16 @@ public class PlayerMovement : MonoBehaviour
     //private bool isDead = false; //originally intended to disable movements when player dies, but with the new input system I can just use the .Dsiable() function instead
     //private bool cursorOn = true; //used to keep track of cursor visibility
 
-    public Transform spawnPoint;
+    
 
     private void OnEnable()
     {
         GetComponent<PlayerInput>().currentActionMap.Enable();
+        GetComponent<PlayerInput>().currentActionMap.FindAction("Climb").Disable();
     }
     private void Update()
     {
-        /*
+        
         if (!isClimbing)
         {
             Move();
@@ -56,8 +59,8 @@ public class PlayerMovement : MonoBehaviour
         {
             Climb();
         }
-        */
-        Move();
+        
+        //Move();
         //apply gravity on y axis if player is not grounded (jumped):
         if (!controller.isGrounded && !isClimbing)
         {
@@ -91,7 +94,9 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.gameObject.tag == "Vine")
         {
-            Climb();
+            GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
+            GetComponent<PlayerInput>().currentActionMap.FindAction("Climb").Enable();
+            isClimbing = true;
         }
         
     }
@@ -101,6 +106,8 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.tag == "Vine")
         {
             isClimbing = false;
+            GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Enable();
+            GetComponent<PlayerInput>().currentActionMap.FindAction("Climb").Disable();
         }
     }
 
@@ -123,6 +130,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnClimb(InputValue inputValue)
     {
         climb = inputValue.Get<Vector2>();
+        //Debug.Log("CLIMB: " + climb);
     }
 
     private void OnJump() //called when action map recieves Jump input
@@ -170,8 +178,20 @@ public class PlayerMovement : MonoBehaviour
 
     public void Climb()
     {
-        isClimbing = true;
-        Debug.Log("is climbing");
+        targetDir = new Vector3(climb.x, climb.y, 0f).normalized;
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        {
+            //transform.forward = -hit.normal;
+            transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 5f * Time.deltaTime);
+        }
+
+        if (targetDir.magnitude >= 0.1f) //if player is giving inputs for x and z direction...
+        {
+            //Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward; //calculates the direction the player should move in, aligning with the player camera, in Vector3 format
+            controller.Move(targetDir.normalized * climbSpeed * Time.deltaTime); //moves player in that direction at desired walking speed
+        }
     }
 
     private void Jump()
@@ -180,6 +200,11 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = jumpForce;
             animator.SetTrigger("jump"); //updates animation for jump
+        }
+        if (isClimbing)
+        {
+            velocity.z = -jumpForce;
+            controller.Move(velocity * 25f * Time.deltaTime);
         }
     }
 
