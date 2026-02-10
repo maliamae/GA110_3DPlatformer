@@ -25,8 +25,14 @@ public class PlayerMovement : MonoBehaviour
 
     private Vector2 move; //used to store input direction
     private Vector3 targetDir; //converts and stores input direction into a Vector3 format 
+
+    [SerializeField]
     private Vector3 velocity; //used to apply gravity and jump force on y axis
+    [SerializeField]
+    private bool isFalling = false; //used to track if character is falling for animation
+
     private bool isDashing = false; //used to limit dash frequency
+    
     //private bool isDead = false; //originally intended to disable movements when player dies, but with the new input system I can just use the .Dsiable() function instead
     private bool cursorOn = true; //used to keep track of cursor visibility
 
@@ -42,8 +48,9 @@ public class PlayerMovement : MonoBehaviour
         if (!controller.isGrounded)
         {
             velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
+            
         }
+        
         animator.SetBool("isGrounded", controller.isGrounded); //update animator isGrounded parameter
     }
 
@@ -91,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
     private void Move()
     {
         targetDir = new Vector3(move.x, 0f, move.y).normalized;
-        float targetAngle = Mathf.Atan2(targetDir.x, targetDir.z) * Mathf.Rad2Deg + playerCam.transform.eulerAngles.y; //angle needed to be applied to match camera direction
+        float targetAngle = Mathf.Atan2(targetDir.x, targetDir.z) * Mathf.Rad2Deg + playerCam.transform.eulerAngles.y; //angle needed to be applied to face the target direction taking into account camera direction
         
         //walking backwards turns character around; smooth angle adjustment to face same direction as camera; occurs while player is moving and when they are idle
         float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
@@ -102,22 +109,24 @@ public class PlayerMovement : MonoBehaviour
             Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward; //calculates the direction the player should move in, aligning with the player camera, in Vector3 format
             controller.Move(moveDir.normalized * walkSpeed * Time.deltaTime); //moves player in that direction at desired walking speed
 
-            animator.SetFloat("moveSpeed", targetDir.magnitude); //updates animator moveSpeed parameter
         }
-        else
-        {
-            animator.SetFloat("moveSpeed", targetDir.magnitude); //updates animator moveSpeed parameter
-        }
-        
+
+        controller.Move(velocity * Time.deltaTime);
+
+        animator.SetFloat("moveSpeed", targetDir.magnitude); //updates animator moveSpeed parameter
+        isFalling = !controller.isGrounded && velocity.y < -0.1f;
+        animator.SetBool("isFalling", isFalling);
+
+        Debug.Log(controller.isGrounded);
+        //Debug.Log(velocity.y);
     }
 
     private void Jump()
     {
         if (controller.isGrounded) //if the player is grounded, apply set jumpforce to the y axis of the player 
         {
-            //velocity.y += gravity * Time.deltaTime;
             velocity.y = jumpForce;
-            controller.Move(velocity * Time.deltaTime);
+            animator.SetTrigger("jump"); //updates animation for jump
         }
     }
 
