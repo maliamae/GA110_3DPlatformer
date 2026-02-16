@@ -166,7 +166,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Climb()
     {
-        targetDir = new Vector3(climb.x, climb.y, 0f).normalized;
+        targetDir = new Vector3(climb.x, climb.y, 0f).normalized; 
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
@@ -174,9 +174,10 @@ public class PlayerMovement : MonoBehaviour
             transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 5f * Time.deltaTime);
         }
 
-        if (targetDir.magnitude >= 0.1f) //if player is giving inputs for x and z direction...
+        if (targetDir.magnitude >= 0.1f) //if player is giving inputs for x and y direction...
         {
-            controller.Move(targetDir.normalized * climbSpeed * Time.deltaTime); //moves player in that direction at desired walking speed
+            Vector3 moveDir = transform.right * targetDir.x + transform.up * targetDir.y; //converts movement direction into local space (so movement is aligned whether the player's left and right are along the x or z axis)
+            controller.Move(moveDir.normalized * climbSpeed * Time.deltaTime); //moves player in that direction at desired walking speed (DIRECTION IS BASED ON WORLD SPACE NOT OBJECT TRANSFORM)
         }
     }
 
@@ -189,7 +190,7 @@ public class PlayerMovement : MonoBehaviour
         }
         if (isClimbing)
         {
-            velocity.z = -jumpForce;
+            velocity = transform.forward * -jumpForce;
             controller.Move(velocity * 25f * Time.deltaTime);
         }
     }
