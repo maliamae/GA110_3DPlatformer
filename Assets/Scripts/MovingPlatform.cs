@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class MovingPlatform : MonoBehaviour
 {
-    public float moveSpeed;
+    //built to test moving platform mechanics, not implemented in level blockout
+
+    public float moveSpeed; 
     private Vector3 initialPos;
     public bool isMax = false;
 

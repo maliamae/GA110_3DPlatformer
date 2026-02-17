@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private bool isFalling = false; //used to track if character is falling for animation
     private bool isDashing = false; //used to limit dash frequency
-    private bool isClimbing = false;
+    private bool isClimbing = false; //used to disable gravity being applied if the player is climbing
 
     private void OnEnable()
     {
@@ -85,9 +85,9 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "Water")
         {
-            OnWaterEnter(); //disables player input action map
+            OnWaterEnter(); //"kills" and respawns player
         }
-
+        //if the player is enters the bounds of a vine, the Move action map is disabled and the Climb action map is enabled (allows me to use the same player inputs but remapped to different directions of movement)
         if (other.gameObject.tag == "Vine")
         {
             GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
@@ -99,6 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
+        //if the player exits the bounds of a vine, the Move action map is reenabled and the Climb action map is disabled
         if (other.gameObject.tag == "Vine")
         {
             isClimbing = false;
@@ -106,16 +107,6 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<PlayerInput>().currentActionMap.FindAction("Climb").Disable();
         }
     }
-
-    /*//USE TRIGGERS INSTEAD
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.gameObject.tag == "Platform")
-        {
-            transform.parent = hit.gameObject.transform;
-        }
-    }
-    */
 
     private void OnMove(InputValue inputValue) //called when action map recieves Move inputs
     {
@@ -166,12 +157,13 @@ public class PlayerMovement : MonoBehaviour
 
     public void Climb()
     {
-        targetDir = new Vector3(climb.x, climb.y, 0f).normalized; 
+        targetDir = new Vector3(climb.x, climb.y, 0f).normalized; //stores inputs on the X and Y axis and not the Z axis because we need upwards and side to side movement when climbing
 
+        //raycast to get the normal of the wall/strcuture the player is climbing
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit))
         {
-            transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 5f * Time.deltaTime);
+            transform.forward = Vector3.Lerp(transform.forward, -hit.normal, 5f * Time.deltaTime); //moves the player's forward to face the wall they are climbing
         }
 
         if (targetDir.magnitude >= 0.1f) //if player is giving inputs for x and y direction...
@@ -190,8 +182,8 @@ public class PlayerMovement : MonoBehaviour
         }
         if (isClimbing)
         {
-            velocity = transform.forward * -jumpForce;
-            controller.Move(velocity * 25f * Time.deltaTime);
+            velocity = transform.forward * -jumpForce; //applies backwards force from the direction of the wall the player is currently climbing 
+            controller.Move(velocity * 25f * Time.deltaTime);//(moves player far enough away from the wall to transition out of Climb and back to Move)
         }
     }
 
