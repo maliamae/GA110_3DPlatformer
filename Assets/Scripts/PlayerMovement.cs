@@ -85,7 +85,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.gameObject.tag == "Water")
         {
-            OnWaterEnter(); //"kills" and respawns player
+            //OnWaterEnter(); //"kills" and respawns player
+            StartCoroutine(EnterWater());
         }
         //if the player is enters the bounds of a vine, the Move action map is disabled and the Climb action map is enabled (allows me to use the same player inputs but remapped to different directions of movement)
         if (other.gameObject.tag == "Vine")
@@ -215,5 +216,14 @@ public class PlayerMovement : MonoBehaviour
         //GetComponent<PlayerInput>().currentActionMap.Disable(); //stops taking and applying player inputs (movement)
         //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
         
+    }
+
+    IEnumerator EnterWater()
+    {
+        controller.enabled = false;
+        animator.enabled = false;
+        yield return new WaitForSeconds(1f);
+        transform.position = spawnPoint.position; //returns player to current temperary respawn point
+        controller.enabled = true;
     }
 }
