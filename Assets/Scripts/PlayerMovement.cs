@@ -9,7 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller; //plug in character controller component that is attached to same object this script is attached to
     public CinemachineCamera playerCam; //plug in third person free look camera
     public Animator animator; //plug in animator component that is attached to same object this script is attached to
-    public Transform spawnPoint;
+    //public Transform spawnPoint;
 
     [Header("Jump")]
     public float gravity = -9.81f;
@@ -44,18 +44,18 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         
-        if (!isClimbing)
+        if (!isClimbing && GetComponent<PlayerInput>().currentActionMap.FindAction("Move").enabled)
         {
             Move();
         }
-        else
+        else if (isClimbing && GetComponent<PlayerInput>().currentActionMap.FindAction("Climb").enabled)
         {
             Climb();
         }
         
         //Move();
         //apply gravity on y axis if player is not grounded (jumped):
-        if (!controller.isGrounded && !isClimbing)
+        if (!controller.isGrounded && !isClimbing && GetComponent<PlayerInput>().enabled)
         {
             velocity.y += gravity * Time.deltaTime;
         }
@@ -86,7 +86,9 @@ public class PlayerMovement : MonoBehaviour
         if (other.gameObject.tag == "Water")
         {
             //OnWaterEnter(); //"kills" and respawns player
-            StartCoroutine(EnterWater());
+            //StartCoroutine(EnterWater());
+            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerDead);
+
         }
         //if the player is enters the bounds of a vine, the Move action map is disabled and the Climb action map is enabled (allows me to use the same player inputs but remapped to different directions of movement)
         if (other.gameObject.tag == "Vine")
@@ -207,23 +209,15 @@ public class PlayerMovement : MonoBehaviour
         //cursorOn = false;
     }
 
-    private void OnWaterEnter()
-    {
-        //Debug.Log("Splash");
-        controller.enabled = false;
-        transform.position = spawnPoint.position; //returns player to current temperary respawn point
-        controller.enabled = true;
-        //GetComponent<PlayerInput>().currentActionMap.Disable(); //stops taking and applying player inputs (movement)
-        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
-        
-    }
-
+    /*
     IEnumerator EnterWater()
     {
-        controller.enabled = false;
+        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
         animator.enabled = false;
         yield return new WaitForSeconds(1f);
         transform.position = spawnPoint.position; //returns player to current temperary respawn point
-        controller.enabled = true;
+        animator.enabled = true;
+        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Enable();
     }
+    */
 }
