@@ -8,8 +8,8 @@ public class GameManager : MonoBehaviour
     //pause, load next level, saves (menu system)
     public static GameManager Instance;
     
-
-    public enum GameState
+    //different possible game states
+    public enum GameState 
     {
         StartMenu,
         Playing,
@@ -20,12 +20,15 @@ public class GameManager : MonoBehaviour
 
     public GameState state;
 
-    public static event Action<GameState> OnGameStateChanged;
+    public static event Action<GameState> OnGameStateChanged; //triggered whenever the game state changes
 
-    public static event Action<Vector3> OnNewCheckpoint;
+    public static event Action<Vector3, int> OnNewCheckpoint; //triggered by SetNewCheckpoint function which is called on trigger of checkpoint bounds
+
+    public static event Action<Collectible.CollectibleType, int> OnRespawn; //triggered by ResetSavedRays function called in CheckpointManager when respawning player
 
     private void Awake()
     {
+        //singleton
         if (Instance == null)
         {
             Instance = this;
@@ -37,11 +40,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    //set initial game state
     private void Start()
     {
         UpdateGameState(GameState.StartMenu);
     }
 
+    //set game state directly
     public void UpdateGameState(GameState newState)
     {
         state = newState;
@@ -64,9 +69,16 @@ public class GameManager : MonoBehaviour
         OnGameStateChanged?.Invoke(newState);
     }
 
-    public void SetNewCheckpoint(Vector3 checkpoint)
+    //saves last checkpoint position and ray amount data
+    public void SetNewCheckpoint(Vector3 checkpoint, int rays)
     {
-        OnNewCheckpoint?.Invoke(checkpoint);
+        OnNewCheckpoint?.Invoke(checkpoint, rays);
+    }
+
+    //passes last saved checkpoint's amount data to CollectibleManager
+    public void ResetSavedRays(Collectible.CollectibleType type, int rays)
+    {
+        OnRespawn?.Invoke(type, rays);
     }
 
 }

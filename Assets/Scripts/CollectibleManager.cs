@@ -6,15 +6,12 @@ using static Collectible; //reference collectible script
 public class CollectibleManager : MonoBehaviour
 {
     public static CollectibleManager Instance { get; private set; }
-    //[SerializeField] int coinsTotal;
-    //[SerializeField] int gemsTotal;
-    //public int totalCollected;
 
-    private Dictionary<CollectibleType, int> collectibles =
-        new Dictionary<CollectibleType, int>();
+    private Dictionary<CollectibleType, int> collectibles = new Dictionary<CollectibleType, int>(); //creates dictionary to store different collectible types and their respective value
 
     private void Awake()
     {
+        //singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -25,7 +22,7 @@ public class CollectibleManager : MonoBehaviour
 
         //Initialize all collectible types to 0
         foreach (CollectibleType type in System.Enum.GetValues(typeof(CollectibleType)))
-            {
+        {
             collectibles[type] = 0;
         }
     }
@@ -34,12 +31,16 @@ public class CollectibleManager : MonoBehaviour
     {
         //subscriber to the collectible event
         CollectibleEventSystem.OnCollectibleCollected += HandleCollectibleCollected; // += adds method defined here to the list of subscribers to the event
+        GameManager.OnRespawn += SetCollectibleAmount; //listens for OnRespawn event to be triggered
+        
     }
 
     private void OnDisable()
     {
         //unsubscribe from event
         CollectibleEventSystem.OnCollectibleCollected -= HandleCollectibleCollected;
+        GameManager.OnRespawn -= SetCollectibleAmount;
+
     }
 
     //event handler method that executes when event is fired
@@ -49,25 +50,18 @@ public class CollectibleManager : MonoBehaviour
             collectibles[type] = 0;
         collectibles[type] += amount;
 
-        Debug.Log($"{type}: {collectibles[type]}");
-
-        CollectibleEventSystem.RaiseCollectiblesUpdated();
+        CollectibleEventSystem.RaiseCollectiblesUpdated(); //function that triggers UI updates
     }
 
-    /*
-    public void Add(CollectibleType type, int amount)
+    //sets amount of rays to an input that has been passed along from CheckpointManager via GameManager events
+    private void SetCollectibleAmount(CollectibleType type, int amount)
     {
-        if (!collectibles.ContainsKey(type))
-            collectibles[type] = 0;
-
-        collectibles[type] += amount;
-
-        Debug.Log($"{type}: {collectibles[type]}");
-
-        
+        if (collectibles.ContainsKey(type))
+            collectibles[type] = amount;
+        //Debug.Log($"{CollectibleType.Light}: {collectibles[CollectibleType.Light]}");
     }
-    */
 
+    //accesses current amount
     public int GetAmount(CollectibleType type)
     {
         if (collectibles.ContainsKey(type))

@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    [SerializeField] private InputActionAsset playerInputActions;
+    [SerializeField] private InputActionAsset playerInputActions; //player's movement action asset
 
     private void OnEnable()
     {
@@ -17,18 +17,14 @@ public class InputManager : MonoBehaviour
 
     private void HandleAcceptInputs(GameManager.GameState state)
     {
-        
-
-        
+        //disable player inputs being accepted while in anything other than play mode
         if (state == GameManager.GameState.Playing)
         {
             playerInputActions.Enable();
-            Debug.Log("inputs accepted");
         }
         else
         {
             playerInputActions.Disable();
-            Debug.Log("inputs disabled");
         }
         
     }

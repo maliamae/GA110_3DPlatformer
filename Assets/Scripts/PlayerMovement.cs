@@ -208,16 +208,4 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked; //locks cursor to center of screen and turns off visibility
         //cursorOn = false;
     }
-
-    /*
-    IEnumerator EnterWater()
-    {
-        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Disable();
-        animator.enabled = false;
-        yield return new WaitForSeconds(1f);
-        transform.position = spawnPoint.position; //returns player to current temperary respawn point
-        animator.enabled = true;
-        //GetComponent<PlayerInput>().currentActionMap.FindAction("Move").Enable();
-    }
-    */
 }
