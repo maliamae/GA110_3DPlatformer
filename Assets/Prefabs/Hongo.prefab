@@ -309,7 +309,6 @@ MonoBehaviour:
   controller: {fileID: 1976601871701101816}
   playerCam: {fileID: 0}
   animator: {fileID: 450741940404697609}
-  spawnPoint: {fileID: 0}
   gravity: -10
   jumpForce: 5.25
   walkSpeed: 4
