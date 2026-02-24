@@ -22,10 +22,10 @@ public class MenuManager : MonoBehaviour
     //changes of active canvases depending on game state
     private void HandleMenuChange(GameManager.GameState state)
     {
-        startScreen.SetActive(state == GameManager.GameState.StartMenu);
+        //startScreen.SetActive(state == GameManager.GameState.StartMenu);
         collectibleScreen.SetActive(state == GameManager.GameState.Playing);
         deathScreen.SetActive(state == GameManager.GameState.PlayerDead);
-        winScreen.SetActive(state == GameManager.GameState.Win);
+        //winScreen.SetActive(state == GameManager.GameState.Win);
     }
 
     //start screen "Play" button
@@ -39,5 +39,6 @@ public class MenuManager : MonoBehaviour
     {
         GameManager.Instance.UpdateGameState(GameManager.GameState.Respawning);
     }
+
 
 }

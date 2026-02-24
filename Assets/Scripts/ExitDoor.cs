@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ExitDoor : MonoBehaviour
 {
@@ -7,6 +8,7 @@ public class ExitDoor : MonoBehaviour
         if(other.gameObject.tag == "Player")
         {
             GameManager.Instance.UpdateGameState(GameManager.GameState.Win);
+            SceneManager.LoadScene("WinScene");
         }
     }
 }

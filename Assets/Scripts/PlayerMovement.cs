@@ -83,6 +83,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) //testing collision with water boundary mechanics
     {
+        /*
         if (other.gameObject.tag == "Water")
         {
             //OnWaterEnter(); //"kills" and respawns player
@@ -90,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
             GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerDead);
 
         }
+        */
         //if the player is enters the bounds of a vine, the Move action map is disabled and the Climb action map is enabled (allows me to use the same player inputs but remapped to different directions of movement)
         if (other.gameObject.tag == "Vine")
         {

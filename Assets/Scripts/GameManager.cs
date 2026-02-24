@@ -1,13 +1,20 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     //win/lose condition
     //pause, load next level, saves (menu system)
     public static GameManager Instance;
-    
+
+    public string nextSceneName;
+
+    [SerializeField] private string mainMenuSceneName = "MainMenu";
+    [SerializeField] private string resetSceneName = "ResetScene";
+    [SerializeField] private string gameplaySceneName = "Scene1";
+
     //different possible game states
     public enum GameState 
     {
@@ -63,6 +70,7 @@ public class GameManager : MonoBehaviour
             case GameState.Respawning:
                 break;
             case GameState.Win:
+                Cursor.lockState = CursorLockMode.None;
                 break;
         }
 
@@ -79,6 +87,29 @@ public class GameManager : MonoBehaviour
     public void ResetSavedRays(Collectible.CollectibleType type, int rays)
     {
         OnRespawn?.Invoke(type, rays);
+    }
+
+    //loads game scene
+    public void LoadGame()
+    {
+        SceneManager.LoadScene(resetSceneName);
+        UpdateGameState(GameState.Playing);
+        nextSceneName = gameplaySceneName;
+    }
+
+    //loads main menus
+    public void ReturnToMenu()
+    {
+        //reset totals before leaving gameplay
+        if (CollectibleManager.Instance != null)
+        {
+            CollectibleManager.Instance.ResetCollectibles();
+        }
+
+        Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene(resetSceneName);
+        
+        nextSceneName = mainMenuSceneName;
     }
 
 }
