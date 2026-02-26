@@ -9,6 +9,8 @@ public class CollectibleManager : MonoBehaviour
 
     private Dictionary<CollectibleType, int> collectibles = new Dictionary<CollectibleType, int>(); //creates dictionary to store different collectible types and their respective value
 
+    [SerializeField] private List<GameObject> collectiblesCollectedList = new List<GameObject>();
+
     private void Awake()
     {
         //singleton
@@ -58,6 +60,7 @@ public class CollectibleManager : MonoBehaviour
     {
         if (collectibles.ContainsKey(type))
             collectibles[type] = amount;
+        RespawnCollectibles();
         //Debug.Log($"{CollectibleType.Light}: {collectibles[CollectibleType.Light]}");
     }
 
@@ -81,6 +84,45 @@ public class CollectibleManager : MonoBehaviour
         CollectibleEventSystem.RaiseCollectiblesUpdated();
 
         Debug.Log("Collectibles reset");
+    }
+
+    public void StoreCollectible(GameObject collectible)
+    {
+        collectiblesCollectedList.Add(collectible);
+    }
+
+    public void ResetCollectibleList()
+    {
+        if (collectiblesCollectedList != null)
+        {
+            foreach (GameObject item in collectiblesCollectedList)
+            {
+                Destroy(item);
+            }
+            collectiblesCollectedList.Clear();
+        }
+        else
+        {
+            return;
+        }
+        
+        
+    }
+
+    private void RespawnCollectibles()
+    {
+        if (collectiblesCollectedList != null)
+        {
+            foreach (GameObject item in collectiblesCollectedList)
+            {
+                item.SetActive(true);
+            }
+        }
+        else
+        {
+            return;
+        }
+        
     }
 
 }

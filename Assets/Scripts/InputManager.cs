@@ -1,9 +1,25 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+    public static InputManager Instance { get; private set; }
+
     [SerializeField] private InputActionAsset playerInputActions; //player's movement action asset
+
+    public static Action OnPlayerDash;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
 
     private void OnEnable()
     {
@@ -27,5 +43,10 @@ public class InputManager : MonoBehaviour
             playerInputActions.Disable();
         }
         
+    }
+
+    public void RaisePlayerDash()
+    {
+        OnPlayerDash?.Invoke();
     }
 }

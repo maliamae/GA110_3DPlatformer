@@ -44,7 +44,9 @@ public class Collectible : MonoBehaviour
         {
             //CollectibleManager.Instance.Add(type, amount);
             CollectibleEventSystem.RaiseCollectibleCollected(type, amount); //calls function from even system script that triggers event that passes along values to manager and UI manager
-            Destroy(gameObject);
+            //Destroy(gameObject);
+            CollectibleManager.Instance.StoreCollectible(this.gameObject);
+            gameObject.SetActive(false);
         }
     }
 

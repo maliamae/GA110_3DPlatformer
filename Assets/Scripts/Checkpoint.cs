@@ -11,6 +11,7 @@ public class Checkpoint : MonoBehaviour
             int rays = CollectibleManager.Instance.GetAmount(CollectibleType.Light);
             GameManager.Instance.SetNewCheckpoint(this.transform.position, rays);
             Destroy(gameObject);
+            //gameObject.SetActive(false);
         }
     }
 }

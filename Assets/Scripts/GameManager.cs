@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string resetSceneName = "ResetScene";
     [SerializeField] private string gameplaySceneName = "Scene1";
+    [SerializeField] private string winSceneName = "WinScene";
 
     //different possible game states
     public enum GameState 
@@ -110,6 +111,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(resetSceneName);
         
         nextSceneName = mainMenuSceneName;
+    }
+
+    public void LoadWinScreen()
+    {
+        SceneManager.LoadScene(resetSceneName);
+        UpdateGameState(GameState.Win);
+        nextSceneName = winSceneName;
     }
 
 }

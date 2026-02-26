@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckpointManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class CheckpointManager : MonoBehaviour
     [SerializeField] private int savedRays; //amount of rays collected when at last checkpoint
     [SerializeField] private GameObject player; //player game object
     public GameObject respawnScreen; //solid black screen for fade transitions
+
+    //public List<GameObject> collectiblesCollectedList = new List<GameObject>();
 
     private void Awake()
     {
@@ -39,6 +42,7 @@ public class CheckpointManager : MonoBehaviour
     {
         currentCheckpoint.position = newCheckpoint;
         savedRays = rays;
+        CollectibleManager.Instance.ResetCollectibleList();
     }
 
     //Respawn character when in respawning game state

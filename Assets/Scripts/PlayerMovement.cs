@@ -133,6 +133,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!isDashing)
         {
+            //signal prompt text to be disabled
+            InputManager.Instance.RaisePlayerDash();
             StartCoroutine(Dash());
         }
     }
