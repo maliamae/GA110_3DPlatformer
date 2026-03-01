@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviour
     //loads game scene
     public void LoadGame()
     {
-        SceneManager.LoadScene(resetSceneName);
+        SceneManager.LoadScene(resetSceneName, LoadSceneMode.Additive);
         UpdateGameState(GameState.Playing);
         nextSceneName = gameplaySceneName;
     }
@@ -108,14 +108,14 @@ public class GameManager : MonoBehaviour
         }
 
         Cursor.lockState = CursorLockMode.None;
-        SceneManager.LoadScene(resetSceneName);
+        SceneManager.LoadScene(resetSceneName, LoadSceneMode.Additive);
         
         nextSceneName = mainMenuSceneName;
     }
 
     public void LoadWinScreen()
     {
-        SceneManager.LoadScene(resetSceneName);
+        SceneManager.LoadScene(resetSceneName, LoadSceneMode.Additive);
         UpdateGameState(GameState.Win);
         nextSceneName = winSceneName;
     }

@@ -9,6 +9,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private InputActionAsset playerInputActions; //player's movement action asset
 
     public static Action OnPlayerDash;
+    public static Action<float, bool> OnPlayerMove;
+    public static Action OnPlayerJump;
 
     private void Awake()
     {
@@ -48,5 +50,15 @@ public class InputManager : MonoBehaviour
     public void RaisePlayerDash()
     {
         OnPlayerDash?.Invoke();
+    }
+
+    public void RaisePlayerMove(float moveSpeed, bool isPossible)
+    {
+        OnPlayerMove?.Invoke(moveSpeed, isPossible);
+    }
+
+    public void RaisePlayerJump()
+    {
+        OnPlayerJump?.Invoke();
     }
 }

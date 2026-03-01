@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     private bool isFalling = false; //used to track if character is falling for animation
     private bool isDashing = false; //used to limit dash frequency
     private bool isClimbing = false; //used to disable gravity being applied if the player is climbing
+    private bool isWalking = false;
 
     private void OnEnable()
     {
@@ -69,6 +70,18 @@ public class PlayerMovement : MonoBehaviour
         isFalling = !controller.isGrounded && velocity.y < -0.1f;
         animator.SetBool("isFalling", isFalling);
         animator.SetBool("isGrounded", controller.isGrounded); //update animator isGrounded parameter
+
+        //communicates with input manager to activate walking sound
+        if (targetDir.magnitude>0.1f && controller.isGrounded && !isClimbing)
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
+        InputManager.Instance.RaisePlayerMove(targetDir.magnitude, isWalking);
+
     }
 
     private void LateUpdate()
@@ -116,6 +129,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnMove(InputValue inputValue) //called when action map recieves Move inputs
     {
         move = inputValue.Get<Vector2>();
+        
     }
 
     private void OnClimb(InputValue inputValue)
@@ -127,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
     private void OnJump() //called when action map recieves Jump input
     {
         Jump();
+        InputManager.Instance.RaisePlayerJump();
     }
 
     private void OnDash() //called when action map recieves Dash input

@@ -84,6 +84,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Barrel
       objectReference: {fileID: 0}
+    - target: {fileID: 5545077466868285114, guid: 2999c7e575102ef49886400c1b7aa201, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7643732187044778916, guid: 2999c7e575102ef49886400c1b7aa201, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

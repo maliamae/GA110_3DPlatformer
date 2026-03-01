@@ -17,6 +17,7 @@ public class PromptPlayer : MonoBehaviour
 
     private void DisablePrompt()
     {
-        promptText.gameObject.SetActive(false);
+        //promptText.gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

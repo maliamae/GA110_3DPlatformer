@@ -12,7 +12,6 @@ public class ResetSceneController : MonoBehaviour
     private void Start()
     {
         StartCoroutine(FadeAndLoad());
-
     }
 
     IEnumerator FadeAndLoad()
