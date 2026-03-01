@@ -7,9 +7,7 @@ public class ExitDoor : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            GameManager.Instance.LoadWinScreen();
-            //GameManager.Instance.UpdateGameState(GameManager.GameState.Win);
-            //SceneManager.LoadScene("WinScene");
+            GameManager.Instance.LoadWinScreen(); //loads win screen and updates game state
         }
     }
 }

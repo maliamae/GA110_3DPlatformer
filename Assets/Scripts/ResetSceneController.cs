@@ -14,15 +14,17 @@ public class ResetSceneController : MonoBehaviour
         StartCoroutine(FadeAndLoad());
     }
 
+    //coroutine that fades in the black image and then loads the next scene after a set amount of time
     IEnumerator FadeAndLoad()
     {
         yield return StartCoroutine(FadeIn());
         yield return new WaitForSeconds(delayBeforeLoad);
 
         
-        SceneManager.LoadScene(GameManager.Instance.nextSceneName);
+        SceneManager.LoadScene(GameManager.Instance.nextSceneName); //loads the next scene which is stored in the GameManager
     }
 
+    //coruotine that fades in the black image
     IEnumerator FadeIn()
     {
         float t = 0;
@@ -36,27 +38,4 @@ public class ResetSceneController : MonoBehaviour
             yield return null;
         }
     }
-
-    /*
-    IEnumerator TransitionRespawn()
-    {
-        respawnScreen.SetActive(true); //black screen is enabled
-        //fade in black screen
-        while (respawnScreen.GetComponentInChildren<CanvasGroup>().alpha < 1)
-        {
-            respawnScreen.GetComponentInChildren<CanvasGroup>().alpha += Time.deltaTime * 1.5f;
-            yield return null;
-        }
-        yield return new WaitForSeconds(1f); //pause
-        player.transform.position = currentCheckpoint.position; //move player to last checkpoint
-        //fade out black screen
-        while (respawnScreen.GetComponentInChildren<CanvasGroup>().alpha > 0)
-        {
-            respawnScreen.GetComponentInChildren<CanvasGroup>().alpha -= Time.deltaTime * 1.5f;
-            yield return null;
-        }
-
-        GameManager.Instance.UpdateGameState(GameManager.GameState.Playing); //allow player input again
-    }
-    */
 }

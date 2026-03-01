@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     //pause, load next level, saves (menu system)
     public static GameManager Instance;
 
-    public string nextSceneName;
+    public string nextSceneName; 
 
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     [SerializeField] private string resetSceneName = "ResetScene";
@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         //reset totals before leaving gameplay
         if (CollectibleManager.Instance != null)
         {
-            CollectibleManager.Instance.ResetCollectibles();
+            CollectibleManager.Instance.ResetCollectibles(); //resets collectible collected values to 0
         }
 
         Cursor.lockState = CursorLockMode.None;
@@ -113,6 +113,7 @@ public class GameManager : MonoBehaviour
         nextSceneName = mainMenuSceneName;
     }
 
+    //loads win screen
     public void LoadWinScreen()
     {
         SceneManager.LoadScene(resetSceneName, LoadSceneMode.Additive);

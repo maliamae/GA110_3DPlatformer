@@ -80,7 +80,7 @@ public class PlayerMovement : MonoBehaviour
         {
             isWalking = false;
         }
-        InputManager.Instance.RaisePlayerMove(targetDir.magnitude, isWalking);
+        InputManager.Instance.RaisePlayerMove(targetDir.magnitude, isWalking); //walking sound
 
     }
 
@@ -96,15 +96,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) //testing collision with water boundary mechanics
     {
-        /*
-        if (other.gameObject.tag == "Water")
-        {
-            //OnWaterEnter(); //"kills" and respawns player
-            //StartCoroutine(EnterWater());
-            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerDead);
-
-        }
-        */
         //if the player is enters the bounds of a vine, the Move action map is disabled and the Climb action map is enabled (allows me to use the same player inputs but remapped to different directions of movement)
         if (other.gameObject.tag == "Vine")
         {
@@ -141,14 +132,14 @@ public class PlayerMovement : MonoBehaviour
     private void OnJump() //called when action map recieves Jump input
     {
         Jump();
-        InputManager.Instance.RaisePlayerJump();
+        InputManager.Instance.RaisePlayerJump(); //jump sound
     }
 
     private void OnDash() //called when action map recieves Dash input
     {
         if (!isDashing)
         {
-            //signal prompt text to be disabled
+            //signal prompt text to be disabled and dash sound
             InputManager.Instance.RaisePlayerDash();
             StartCoroutine(Dash());
         }

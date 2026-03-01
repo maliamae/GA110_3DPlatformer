@@ -30,7 +30,7 @@ public class MusicManager : MonoBehaviour
         menuMusicSource.Play();
         gameplayMusicSource.Pause();
 
-        SceneManager.activeSceneChanged += OnSceneChanged;
+        SceneManager.activeSceneChanged += OnSceneChanged; //listens for when the scene is changed to play the corresponding music
     }
 
     private void OnDestroy()

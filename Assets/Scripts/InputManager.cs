@@ -14,6 +14,7 @@ public class InputManager : MonoBehaviour
 
     private void Awake()
     {
+        //singleton
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -47,16 +48,19 @@ public class InputManager : MonoBehaviour
         
     }
 
+    //sends event to subscribers of OnPlayerDash (SoundManager and PromptText)
     public void RaisePlayerDash()
     {
         OnPlayerDash?.Invoke();
     }
 
+    //sends event to subscribers of OnPlayerMove (SoundManager)
     public void RaisePlayerMove(float moveSpeed, bool isPossible)
     {
         OnPlayerMove?.Invoke(moveSpeed, isPossible);
     }
 
+    //sends event to subscribers of OnPlayerJump (SoundManager)
     public void RaisePlayerJump()
     {
         OnPlayerJump?.Invoke();

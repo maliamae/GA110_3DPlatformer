@@ -6,8 +6,7 @@ public class KillZone : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerDead);
-            //GameManager.Instance.ReturnToMenu();
+            GameManager.Instance.UpdateGameState(GameManager.GameState.PlayerDead); //updates game state to trigger screen overlay of respawn screen
         }
     }
 }

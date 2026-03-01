@@ -73,6 +73,7 @@ public class CollectibleManager : MonoBehaviour
         return 0;
     }
 
+    //resets collectible values when game is reset to main menu
     public void ResetCollectibles()
     {
         foreach (CollectibleType type in System.Enum.GetValues(typeof(CollectibleType)))
@@ -83,14 +84,16 @@ public class CollectibleManager : MonoBehaviour
         //notify UI to refresh
         CollectibleEventSystem.RaiseCollectiblesUpdated();
 
-        Debug.Log("Collectibles reset");
+        //Debug.Log("Collectibles reset");
     }
 
+    //stores collectibles collected since last checkpoint so they can be respawned if player dies before reaching the next checkpoint
     public void StoreCollectible(GameObject collectible)
     {
         collectiblesCollectedList.Add(collectible);
     }
 
+    //resets the collectibles collected list of game objects back to nothing when the player reaches a checkpoint, destroying the previously only disabled game objects
     public void ResetCollectibleList()
     {
         if (collectiblesCollectedList != null)
@@ -109,6 +112,7 @@ public class CollectibleManager : MonoBehaviour
         
     }
 
+    //respawns collectibles collected since reaching the last checkpoint, giving the player another chance to collect them since they were respawned
     private void RespawnCollectibles()
     {
         if (collectiblesCollectedList != null)
